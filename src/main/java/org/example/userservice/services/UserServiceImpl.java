@@ -49,10 +49,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO getUser(Long id) {
-        return userRepository.findById(id)
-                .map(userMapper::toUserResponseDTO)
-                .orElseThrow(() -> new UserNotFoundException("Utilisateur avec ID " + id + " introuvable"));
+       User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("utilisateur introuvable avec id " + id));
+
+        return userMapper.toUserResponseDTO(user);
     }
+
 
     @Override
     public UserResponseDTO getUserByUsername(String username) {
