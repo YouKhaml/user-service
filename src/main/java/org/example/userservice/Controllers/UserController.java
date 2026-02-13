@@ -8,13 +8,12 @@ import org.example.userservice.dto.UserResponseDTO;
 import org.example.userservice.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
     public UserController(UserService userService) {
@@ -22,7 +21,6 @@ public class UserController {
     }
 
     @PostMapping("/createUser")
-    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<UserResponseDTO>  createUser(@Valid  @RequestBody UserDTO userDTO) {
         UserResponseDTO createdUser = userService.createUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
@@ -50,7 +48,6 @@ public class UserController {
         return ResponseEntity.ok(userResponseDTO);
     }
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<?> getAllUsers() {
         List<UserResponseDTO> users = userService.getAllUsers();
 
@@ -81,7 +78,6 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("/roleToUser")
-    @PreAuthorize("hasAuthority('SuperAdmin')")
     public ResponseEntity<Void> AddRoleToUser(@RequestBody RoleToUserDTO roleToUserDTO) {
         userService.addRoleToUser(roleToUserDTO);
         return ResponseEntity.noContent().build();

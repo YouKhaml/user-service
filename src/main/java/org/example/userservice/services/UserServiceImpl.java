@@ -11,7 +11,6 @@ import org.example.userservice.exception.UserNotFoundException;
 import org.example.userservice.mapper.UserMapper;
 import org.example.userservice.repositories.AppRoleRepository;
 import org.example.userservice.repositories.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +24,12 @@ public class UserServiceImpl implements UserService {
    private final AppRoleRepository appRoleRepository;
 
    private final UserMapper userMapper;
-   private final PasswordEncoder passwordEncoder;
-   public UserServiceImpl(UserRepository userRepository, AppRoleRepository appRoleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+
+   public UserServiceImpl(UserRepository userRepository, AppRoleRepository appRoleRepository, UserMapper userMapper) {
        this.userRepository = userRepository;
        this.appRoleRepository = appRoleRepository;
        this.userMapper = userMapper;
-       this.passwordEncoder = passwordEncoder;
+
    }
 
 
@@ -41,7 +40,6 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException("Un utilisateur avec ce username existe déjà.");
         }
         User user = userMapper.toUser(userDTO);
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User savedUser = userRepository.save(user);
 
         return userMapper.toUserResponseDTO(savedUser);
@@ -82,10 +80,7 @@ public class UserServiceImpl implements UserService {
                        existingUser.setUsername(updateUserDTO.getUsername());
                    }
 
-                   // Encode le mot de passe s'il est non vide
-                   if (updateUserDTO.getPassword() != null && !updateUserDTO.getPassword().isBlank()) {
-                       existingUser.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
-                   }
+
                    if(updateUserDTO.getNom() != null && !updateUserDTO.getNom().isBlank()) {
                        existingUser.setNom(updateUserDTO.getNom());
                    }

@@ -2,11 +2,9 @@ package org.example.userservice.Controllers;
 
 import jakarta.validation.Valid;
 import org.example.userservice.dto.AppRoleDTO;
-import org.example.userservice.entities.AppRole;
 import org.example.userservice.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,13 +19,13 @@ public class RoleControllers {
         this.userService = userService;
     }
     @PostMapping("/createRole")
-    @PreAuthorize("hasAuthority('Admin,SuperAdmin')")
+
     public ResponseEntity<AppRoleDTO> createRole(@Valid @RequestBody AppRoleDTO role) {
         AppRoleDTO createdRole = userService.createRole(role);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRole);
     }
     @GetMapping("/role/{id}")
-    @PreAuthorize("hasAuthority('Admin,SuperAdmin')")
+
     public ResponseEntity<AppRoleDTO> getRole(@PathVariable Long id) {
         AppRoleDTO role = userService.getRole(id);
 
@@ -39,7 +37,7 @@ public class RoleControllers {
         return ResponseEntity.ok(role);
     }
     @GetMapping("/roles")
-    @PreAuthorize("hasAuthority('Admin,SuperAdmin')")
+
     public ResponseEntity<?> getAllRoles() {
         List<AppRoleDTO> roles = userService.getAllRoles();
 
@@ -51,7 +49,7 @@ public class RoleControllers {
     }
 
     @PutMapping("/updateRole/{id}")
-    @PreAuthorize("hasAuthority('Admin,SuperAdmin')")
+
     public ResponseEntity<AppRoleDTO> updateRole(@PathVariable Long id, @Valid @RequestBody AppRoleDTO role) {
         AppRoleDTO updatedRole = userService.updateRole(id, role);
         if (updatedRole == null) {
@@ -62,7 +60,7 @@ public class RoleControllers {
     }
 
     @DeleteMapping("/deleteRole/{id}")
-    @PreAuthorize("hasAuthority('Admin,SuperAdmin')")
+
     public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
         userService.deleteRole(id);
         return ResponseEntity.noContent().build();
